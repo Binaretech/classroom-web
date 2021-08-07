@@ -1,4 +1,6 @@
 # Classroom web
+
+[![web CI](https://github.com/Binaretech/classroom-web/actions/workflows/node.js.yml/badge.svg)](https://github.com/Binaretech/classroom-web/actions/workflows/node.js.yml)
 ## Arquitecture
 
 The full classroom is made up with three services routed by traefik, two databases and a cache store
