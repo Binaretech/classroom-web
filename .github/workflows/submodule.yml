@@ -24,4 +24,4 @@ jobs:
         PARENT_BRANCH: main
         WORKFLOW_ID: 11979033
       run: |
-        curl -fL --retry 3 -X POST -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${{ env.CLASSROOM_CI_TOKEN }}" https://api.github.com/repos/${{ env.PAREN
+        curl -fL --retry 3 -X POST -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${{ env.CI_TOKEN }}" https://api.github.com/repos/${{ env.PAREN
