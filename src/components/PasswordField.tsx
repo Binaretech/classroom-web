@@ -4,15 +4,16 @@ import {
   TextField,
   TextFieldProps,
 } from "@mui/material";
-import { useState } from "react";
+import { forwardRef, Ref, useState } from "react";
 
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 interface PasswordFieldProps {}
 
-export default function PasswordField(
-  props: PasswordFieldProps & TextFieldProps
+function PasswordField(
+  props: PasswordFieldProps & TextFieldProps,
+  ref: Ref<HTMLInputElement>
 ) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -24,6 +25,9 @@ export default function PasswordField(
     <TextField
       {...props}
       type={showPassword ? "text" : "password"}
+      inputProps={{
+        ref,
+      }}
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">
@@ -39,3 +43,5 @@ export default function PasswordField(
     />
   );
 }
+
+export default forwardRef(PasswordField);

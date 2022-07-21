@@ -1,9 +1,53 @@
-import { Button, Grid, Paper, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  FormControlLabel,
+  Grid,
+  Paper,
+  styled,
+  FormGroup,
+  TextField,
+  Typography,
+  ButtonProps,
+} from "@mui/material";
 import { useTranslation } from "react-i18next";
 import PasswordField from "../../components/PasswordField";
+import GoogleIcon from "@mui/icons-material/Google";
+import { CheckBox } from "@mui/icons-material";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+const StyledButton = styled(Button)({
+  fontWeight: 700,
+  padding: "0.9rem 0",
+});
+
+const GoogleButton = styled(StyledButton)<ButtonProps>(({ theme }) => ({
+  background: theme.palette.grey["900"],
+}));
+
+interface Inputs {
+  email: string;
+  password: string;
+}
+
+const schema = yup.object().shape({
+  email: yup.string().email().required(),
+  password: yup.string().required(),
+});
 
 export default function LoginView() {
   const { t } = useTranslation(["login", "attributes"]);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>({
+    resolver: yupResolver(schema),
+  });
+
+  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
 
   return (
     <Grid
@@ -19,78 +63,101 @@ export default function LoginView() {
         <Grid item lg={5} xl={4} md={6} sm={8}>
           <Paper elevation={5}>
             <Grid container direction="column" justifyContent="space-between">
-              <Grid item p="2em">
-                <Grid item p="2em">
-                  <Typography variant="h4" align="center">
+              <Grid item p="2rem 5rem">
+                <Grid item p="2rem">
+                  <Typography
+                    variant="h2"
+                    align="center"
+                    fontSize="2.25rem"
+                    fontWeight="400"
+                  >
                     {t("title", { ns: "login" })}
                   </Typography>
                 </Grid>
-
-                <Grid
-                  item
-                  component="form"
-                  container
-                  direction="column"
-                  p="2em"
-                  // onSubmit={formik.handleSubmit}
-                >
-                  <Grid item py="1em">
-                    <TextField
-                      id="email"
-                      name="email"
-                      label={t("email", { ns: "fields" })}
-                      fullWidth
-                    />
-                  </Grid>
-
-                  <Grid item py="1em">
-                    <PasswordField
-                      name="password"
-                      label={t("password", { ns: "fields" })}
-                      id="password"
-                      fullWidth
-                    />
-                  </Grid>
-
+                <FormGroup onSubmit={handleSubmit(onSubmit)}>
                   <Grid
                     item
+                    component="form"
                     container
-                    justifyContent="space-between"
-                    alignItems="center"
-                    pt="1em"
+                    direction="column"
+                    p="2em"
+                    // onSubmit={formik.handleSubmit}
                   >
-                    {/* <RememberCheck onChange={formik.handleChange} /> */}
-                    <Typography color="primary.dark">{t("forgot")}</Typography>
-                  </Grid>
-
-                  <Grid item container direction="column" spacing={3} py="3em">
-                    <Grid item>
-                      <Button
-                        variant="contained"
-                        color="primary"
+                    <Grid item py="1em">
+                      <TextField
+                        {...register("email")}
+                        label={t("email", { ns: "fields" })}
+                        InputLabelProps={{
+                          className: "capitalize",
+                        }}
                         fullWidth
-                        type="submit"
-                        sx={{ py: "1em" }}
-                      >
-                        <Typography fontWeight="500">{t("login")}</Typography>
-                      </Button>
+                        error={!!errors.email}
+                        helperText={errors.email?.message}
+                      />
                     </Grid>
 
-                    <Grid item>
-                      <Button
-                        aria-label="Google"
-                        variant="contained"
+                    <Grid item py="1em">
+                      <PasswordField
+                        {...register("password")}
+                        label={t("password", { ns: "fields" })}
+                        InputLabelProps={{
+                          className: "capitalize",
+                        }}
                         fullWidth
-                        sx={{ py: "1em" }}
-                      >
-                        {/* <GoogleIcon /> */}
-                        <Typography fontWeight="500" px="1em">
-                          Login with Google
-                        </Typography>
-                      </Button>
+                      />
+                    </Grid>
+
+                    <Grid
+                      item
+                      container
+                      justifyContent="space-between"
+                      alignItems="center"
+                      py="2rem"
+                    >
+                      <FormControlLabel
+                        control={<CheckBox color="primary" />}
+                        label="Label"
+                        sx={{ margin: "0" }}
+                      />
+
+                      <Typography color="primary.dark">
+                        {t("forgot")}
+                      </Typography>
+                    </Grid>
+
+                    <Grid
+                      item
+                      container
+                      direction="column"
+                      spacing={3}
+                      py="1rem"
+                    >
+                      <Grid item>
+                        <StyledButton
+                          variant="contained"
+                          color="primary"
+                          fullWidth
+                          type="submit"
+                        >
+                          <Typography fontWeight="500">{t("login")}</Typography>
+                        </StyledButton>
+                      </Grid>
+
+                      <Grid item>
+                        <GoogleButton
+                          aria-label="Google"
+                          variant="contained"
+                          fullWidth
+                        >
+                          <GoogleIcon />
+                          <Typography fontWeight="500" px="1em">
+                            Login with Google
+                          </Typography>
+                        </GoogleButton>
+                      </Grid>
                     </Grid>
                   </Grid>
-                </Grid>
+                </FormGroup>
               </Grid>
             </Grid>
           </Paper>
